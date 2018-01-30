@@ -22,7 +22,7 @@ stdenv.mkDerivation rec {
       "ftp://ftp.invisible-island.net/ncurses/current/${name}.tgz"
       "https://invisible-mirror.net/archives/ncurses/current/${name}.tgz"
     ];
-    sha256 = "123psrchrqhdvjvl19wc54ldvrgqyal1ysz6mc02h4w0v8fmc3g0";
+    sha256 = "1fd54pc0p8g5cyn6hcir2kgc63vvpjymf5r24v4yx2laz4bfbzy2";
   });
 
   # Unnecessarily complicated in order to avoid mass-rebuilds
