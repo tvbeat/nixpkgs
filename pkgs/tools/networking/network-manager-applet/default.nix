@@ -2,22 +2,23 @@
 , libnotify, libsecret, polkit, isocodes, modemmanager
 , mobile_broadband_provider_info, glib_networking, gsettings_desktop_schemas
 , udev, libgudev, hicolor_icon_theme, jansson, wrapGAppsHook, webkitgtk
-, withGnome ? false }:
+, libindicator-gtk3, libappindicator-gtk3, withGnome ? false }:
 
 stdenv.mkDerivation rec {
   name    = "${pname}-${major}.${minor}";
   pname   = "network-manager-applet";
   major   = "1.8";
-  minor   = "2";
+  minor   = "6";
 
   src = fetchurl {
     url    = "mirror://gnome/sources/${pname}/${major}/${name}.tar.xz";
-    sha256 = "09f9hjpn9nkhw57mk6pi7q1bq3lhf5hvmwas0fknscssak7yjmry";
+    sha256 = "0c4wxwxpa7wlskvnqaqfa7mmc0c6a2pj7jcvymcchjnq4wn9wx01";
   };
 
   configureFlags = [
     "--sysconfdir=/etc"
     "--without-selinux"
+    "--with-appindicator"
   ];
 
   outputs = [ "out" "dev" ];
@@ -26,6 +27,7 @@ stdenv.mkDerivation rec {
     gnome3.gtk libglade networkmanager libnotify libsecret gsettings_desktop_schemas
     polkit isocodes udev libgudev gnome3.libgnome_keyring
     modemmanager jansson glib_networking
+    libindicator-gtk3 libappindicator-gtk3
   ] ++ stdenv.lib.optional withGnome webkitgtk;
 
   nativeBuildInputs = [ intltool pkgconfig wrapGAppsHook ];
