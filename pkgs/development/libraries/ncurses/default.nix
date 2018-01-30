@@ -11,7 +11,7 @@
 }:
 
 stdenv.mkDerivation rec {
-  version = if abiVersion == "5" then "5.9" else "6.0-20171125";
+  version = if abiVersion == "5" then "5.9" else "6.0-20180121";
   name = "ncurses-${version}";
 
   src = fetchurl (if abiVersion == "5" then {
@@ -22,7 +22,7 @@ stdenv.mkDerivation rec {
       "ftp://ftp.invisible-island.net/ncurses/current/${name}.tgz"
       "https://invisible-mirror.net/archives/ncurses/current/${name}.tgz"
     ];
-    sha256 = "11adzj0k82nlgpfrflabvqn2m7fmhp2y6pd7ivmapynxqb9vvb92";
+    sha256 = "123psrchrqhdvjvl19wc54ldvrgqyal1ysz6mc02h4w0v8fmc3g0";
   });
 
   # Unnecessarily complicated in order to avoid mass-rebuilds
