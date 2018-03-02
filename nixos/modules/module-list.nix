@@ -31,6 +31,7 @@
   ./hardware/ckb.nix
   ./hardware/cpu/amd-microcode.nix
   ./hardware/cpu/intel-microcode.nix
+  ./hardware/digitalbitbox.nix
   ./hardware/sensor/iio.nix
   ./hardware/ksm.nix
   ./hardware/mcelog.nix
@@ -78,6 +79,7 @@
   ./programs/command-not-found/command-not-found.nix
   ./programs/criu.nix
   ./programs/dconf.nix
+  ./programs/digitalbitbox/default.nix
   ./programs/environment.nix
   ./programs/fish.nix
   ./programs/freetds.nix
@@ -437,6 +439,7 @@
   ./services/network-filesystems/u9fs.nix
   ./services/network-filesystems/yandex-disk.nix
   ./services/network-filesystems/xtreemfs.nix
+  ./services/network-filesystems/ceph.nix
   ./services/networking/amuled.nix
   ./services/networking/aria2.nix
   ./services/networking/asterisk.nix

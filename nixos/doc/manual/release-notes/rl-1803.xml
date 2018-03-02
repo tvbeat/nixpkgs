@@ -290,6 +290,12 @@ following incompatible changes:</para>
       </itemizedlist>
     </para>
   </listitem>
+  <listitem>
+    <para>
+      <literal>nodejs-4_x</literal> is end-of-life.
+      <literal>nodejs-4_x</literal>, <literal>nodejs-slim-4_x</literal> and <literal>nodePackages_4_x</literal> are removed.
+    </para>
+  </listitem>
 </itemizedlist>
 
 </section>
@@ -422,6 +428,13 @@ following incompatible changes:</para>
       The NixOS test driver supports user services declared by <literal>systemd.user.services</literal>.
       The methods <literal>waitForUnit</literal>, <literal>getUnitInfo</literal>, <literal>startJob</literal>
       and <literal>stopJob</literal> provide an optional <literal>$user</literal> argument for that purpose.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+      Enabling bash completion on NixOS, <literal>programs.bash.enableCompletion</literal>, will now also enable
+      completion for the Nix command line tools by installing the
+      <link xlink:href="https://github.com/hedning/nix-bash-completions">nix-bash-completions</link> package.
     </para>
   </listitem>
 </itemizedlist>
