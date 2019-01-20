@@ -24,7 +24,7 @@ in rec {
       #./patches/stdsimd-disable-doctest.patch
     ];
 
-    withBundledLLVM = false;
+    withBundledLLVM = true;
 
     configureFlags = [ "--release-channel=stable" ];
 

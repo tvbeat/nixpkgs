@@ -160,7 +160,7 @@ stdenv.mkDerivation {
 
   # https://github.com/NixOS/nixpkgs/pull/21742#issuecomment-272305764
   # https://github.com/rust-lang/rust/issues/30181
-  # enableParallelBuilding = false;
+  enableParallelBuilding = true;
 
   meta = with stdenv.lib; {
     homepage = https://www.rust-lang.org/;
