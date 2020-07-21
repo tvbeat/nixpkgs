@@ -230,7 +230,6 @@ let
   };
 
   packagesWithNativeBuildInputs = {
-    abn = [ pkgs.gsl_1 ];
     adimpro = [ pkgs.imagemagick ];
     animation = [ pkgs.which ];
     audio = [ pkgs.portaudio ];
@@ -280,8 +279,8 @@ let
     mwaved = [ pkgs.fftw.dev ];
     ncdf4 = [ pkgs.netcdf ];
     nloptr = [ pkgs.nlopt pkgs.pkgconfig ];
+    n1qn1 = [ pkgs.gfortran ];
     odbc = [ pkgs.unixODBC ];
-    outbreaker = [ pkgs.gsl_1 ];
     pander = [ pkgs.pandoc pkgs.which ];
     pbdMPI = [ pkgs.openmpi ];
     pbdNCDF4 = [ pkgs.netcdf ];
@@ -293,8 +292,6 @@ let
     png = [ pkgs.libpng.dev ];
     proj4 = [ pkgs.proj ];
     protolite = [ pkgs.protobuf ];
-    qtbase = [ pkgs.qt4 ];
-    qtpaint = [ pkgs.qt4 ];
     R2SWF = [ pkgs.zlib pkgs.libpng pkgs.freetype.dev ];
     RAppArmor = [ pkgs.libapparmor ];
     rapportools = [ pkgs.which ];
@@ -307,7 +304,6 @@ let
     reprex = [ pkgs.which ];
     rgdal = [ pkgs.proj.dev pkgs.gdal ];
     rgeos = [ pkgs.geos ];
-    rggobi = [ pkgs.ggobi pkgs.gtk2.dev pkgs.libxml2.dev ];
     Rglpk = [ pkgs.glpk ];
     RGtk2 = [ pkgs.gtk2.dev ];
     rhdf5 = [ pkgs.zlib ];
@@ -353,7 +349,6 @@ let
     TAQMNGR = [ pkgs.zlib.dev ];
     tesseract = [ pkgs.tesseract pkgs.leptonica ];
     tiff = [ pkgs.libtiff.dev ];
-    TKF = [ pkgs.gsl_1 ];
     tkrplot = [ pkgs.xorg.libX11 pkgs.tk.dev ];
     topicmodels = [ pkgs.gsl_1 ];
     udunits2 = [ pkgs.udunits pkgs.expat ];
@@ -391,12 +386,9 @@ let
     pbdZMQ = lib.optionals stdenv.isDarwin [ pkgs.darwin.binutils ];
     RMark = [ pkgs.which ];
     RPushbullet = [ pkgs.which ];
-    qtpaint = [ pkgs.cmake ];
-    qtbase = [ pkgs.cmake pkgs.perl ];
     RcppEigen = [ pkgs.libiconv ];
     RCurl = [ pkgs.curl.dev ];
     R2SWF = [ pkgs.pkgconfig ];
-    rggobi = [ pkgs.pkgconfig ];
     rgl = [ pkgs.libGLU pkgs.libGLU.dev pkgs.libGL pkgs.xlibsWrapper ];
     RGtk2 = [ pkgs.pkgconfig ];
     RProtoBuf = [ pkgs.pkgconfig ];
@@ -421,6 +413,11 @@ let
     systemfonts = [ pkgs.pkgconfig ];
     tesseract = [ pkgs.pkgconfig ];
     Cairo = [ pkgs.pkgconfig ];
+    CLVTools = [ pkgs.gsl ];
+    JMcmprsk = [ pkgs.gsl ];
+    mashr = [ pkgs.gsl ];
+    hadron = [ pkgs.gsl ];
+    AMOUNTAIN = [ pkgs.gsl ];
     Rsymphony = [ pkgs.pkgconfig pkgs.doxygen pkgs.graphviz pkgs.subversion ];
     tcltk2 = [ pkgs.tcl pkgs.tk ];
     tikzDevice = [ pkgs.which pkgs.texlive.combined.scheme-medium ];
@@ -458,9 +455,7 @@ let
     "AnthropMMD"
     "aplpack"
     "asbio"
-    "AtelieR"
     "BAT"
-    "bayesDem"
     "BCA"
     "betapart"
     "BiodiversityR"
@@ -495,7 +490,6 @@ let
     "dynBiplotGUI"
     "EasyqpcR"
     "EcoVirtual"
-    "ENiRG"
     "exactLoglinTest"
     "fat2Lpoly"
     "fbati"
@@ -505,7 +499,6 @@ let
     "FFD"
     "fgui"
     "fisheyeR"
-    "fit4NM"
     "forams"
     "forensim"
     "FreeSortR"
@@ -518,15 +511,12 @@ let
     "GGEBiplotGUI"
     "gnm"
     "GPCSIV"
-    "GrammR"
     "GrapheR"
     "GroupSeq"
     "gsubfn"
     "GUniFrac"
     "gWidgets2RGtk2"
     "gWidgets2tcltk"
-    "gWidgetsRGtk2"
-    "gWidgetstcltk"
     "HH"
     "HiveR"
     "ic50"
@@ -542,14 +532,10 @@ let
     "LS2Wstat"
     "MareyMap"
     "memgene"
-    "MergeGUI"
     "metacom"
     "Meth27QC"
-    "MetSizeR"
-    "MicroStrategyR"
     "migui"
     "miniGUI"
-    "MissingDataGUI"
     "mixsep"
     "MplusAutomation"
     "mpmcorrelogram"
@@ -567,7 +553,6 @@ let
     "pez"
     "phylotools"
     "picante"
-    "PKgraph"
     "plotSEMM"
     "plsRbeta"
     "plsRglm"
@@ -578,8 +563,6 @@ let
     "prefmod"
     "PrevMap"
     "ProbForecastGOP"
-    "qtbase"
-    "qtpaint"
     "r4ss"
     "RandomFields"
     "rareNMtests"
@@ -598,7 +581,6 @@ let
     "RcmdrPlugin_KMggplot2"
     "RcmdrPlugin_lfstat"
     "RcmdrPlugin_MA"
-    "RcmdrPlugin_mosaic"
     "RcmdrPlugin_MPAStats"
     "RcmdrPlugin_orloca"
     "RcmdrPlugin_plotByGroup"
@@ -616,16 +598,12 @@ let
     "RcmdrPlugin_UCA"
     "recluster"
     "relimp"
-    "RenextGUI"
-    "reshapeGUI"
     "rgl"
     "RHRV"
     "rich"
     "RNCEP"
-    "RQDA"
     "RSDA"
     "RSurvey"
-    "RunuranGUI"
     "simba"
     "Simile"
     "SimpleTable"
@@ -662,7 +640,6 @@ let
     "vegan"
     "vegan3d"
     "vegclust"
-    "WMCapacity"
     "x12GUI"
   ];
 
@@ -772,10 +749,6 @@ let
       '';
     });
 
-    qtbase = old.qtbase.overrideDerivation (attrs: {
-      patches = [ ./patches/qtbase.patch ];
-    });
-
     Rmpi = old.Rmpi.overrideDerivation (attrs: {
       configureFlags = [
         "--with-Rmpi-type=OPENMPI"
@@ -828,6 +801,9 @@ let
     });
 
     openssl = old.openssl.overrideDerivation (attrs: {
+      preConfigure = ''
+        patchShebangs configure
+      '';
       PKGCONFIG_CFLAGS = "-I${pkgs.openssl.dev}/include";
       PKGCONFIG_LIBS = "-Wl,-rpath,${pkgs.openssl.out}/lib -L${pkgs.openssl.out}/lib -lssl -lcrypto";
     });
@@ -877,6 +853,12 @@ let
     });
 
     magick = old.magick.overrideDerivation (attrs: {
+      preConfigure = ''
+        patchShebangs configure
+        '';
+    });
+
+    libgeos = old.libgeos.overrideDerivation (attrs: {
       preConfigure = ''
         patchShebangs configure
         '';
