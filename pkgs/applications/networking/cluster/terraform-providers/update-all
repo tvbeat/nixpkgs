@@ -120,6 +120,7 @@ slugs=(
   poseidon/terraform-provider-ct
   tweag/terraform-provider-nixos
   tweag/terraform-provider-secret
+  cloudflare/terraform-provider-cloudflare
 )
 
 # a list of providers to ignore
@@ -129,6 +130,7 @@ blacklist=(
   terraform-providers/terraform-provider-circonus
   terraform-providers/terraform-provider-cloudinit
   terraform-providers/terraform-provider-quorum
+  terraform-providers/terraform-provider-hcloud
   hashicorp/terraform-provider-time
   terraform-providers/terraform-provider-vmc
 )

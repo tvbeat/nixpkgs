@@ -142,6 +142,7 @@ let
     ansible = callPackage ./ansible {};
     elasticsearch = callPackage ./elasticsearch {};
     gandi = callPackage ./gandi {};
+    hcloud = callPackage ./hcloud {};
     keycloak = callPackage ./keycloak {};
     libvirt = callPackage ./libvirt {};
     lxd = callPackage ./lxd {};
