@@ -9,8 +9,12 @@
 
   let
     baseRustcOpts =
-      [(if release then "-C opt-level=3" else "-C debuginfo=2")]
-      ++ ["-C codegen-units=$NIX_BUILD_CORES"]
+      (if release then (["-C opt-level=3" "-C codegen-units=1"]
+                       ++ lib.optional (! lib.elem "proc-macro" crateType
+                                     && ! lib.elem "dylib" crateType
+                                     && ! lib.elem "staticlib" crateType) "-C lto=yes")
+                  else ["-C debuginfo=2"])
+      ++ ["-C incremental=no"]
       ++ ["--remap-path-prefix=$NIX_BUILD_TOP=/" ]
       ++ [(mkRustcDepArgs dependencies crateRenames)]
       ++ [(mkRustcFeatureArgs crateFeatures)]
