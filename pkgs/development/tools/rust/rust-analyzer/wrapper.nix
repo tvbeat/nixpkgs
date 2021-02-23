@@ -5,7 +5,7 @@ lib.makeOverridable ({
   pname ? "rust-analyzer",
   version ? unwrapped.version,
   # Use name from `RUST_SRC_PATH`
-  rustSrc ? rustPlatform.rustcSrc,
+  rustSrc ? rustPlatform.rustLibSrc,
 }: runCommandNoCC "${pname}-${version}" {
   inherit pname version;
   inherit (unwrapped) src meta;
