@@ -32,6 +32,8 @@ rustPlatform.buildRustPackage {
     export RUST_SRC_PATH=${rustPlatform.rustLibSrc}
   '';
 
+  passthru.updateScript = ./update.sh;
+
   doInstallCheck = true;
   installCheckPhase = ''
     runHook preInstallCheck
