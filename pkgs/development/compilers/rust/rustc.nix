@@ -147,6 +147,7 @@ in stdenv.mkDerivation rec {
     # install rustc-dev components. Necessary to build rls, clippy...
 
     python x.py dist rustc-dev
+
     tar xf build/dist/rustc-dev*tar.gz
     cp -r rustc-dev*/rustc-dev*/lib/* $out/lib/
     rm $out/lib/rustlib/install.log
