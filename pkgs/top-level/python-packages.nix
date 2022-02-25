@@ -8455,6 +8455,8 @@ in {
 
   rawkit = callPackage ../development/python-modules/rawkit { };
 
+  rbfopt = callPackage ../development/python-modules/rbfopt { };
+
   rbtools = callPackage ../development/python-modules/rbtools { };
 
   rcssmin = callPackage ../development/python-modules/rcssmin { };
