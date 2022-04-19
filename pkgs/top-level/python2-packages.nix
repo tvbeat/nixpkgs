@@ -119,6 +119,8 @@ with self; with super; {
   pyroma = callPackage ../development/python2-modules/pyroma { };
 
   pysqlite = callPackage ../development/python2-modules/pysqlite { };
+  
+  pyopenssl = callPackage ../development/python2-modules/pyopenssl { };
 
   pytest = pytest_4;
 
