@@ -14699,7 +14699,7 @@ with pkgs;
     stdenv = gcc7Stdenv;
   }));
 
-  llvmPackages_latest = llvmPackages_14;
+  llvmPackages_latest = llvmPackages_15;
 
   llvmPackages_rocm = recurseIntoAttrs (callPackage ../development/compilers/llvm/rocm { });
 
@@ -21276,7 +21276,9 @@ with pkgs;
   libGLU = mesa_glu;
 
   mesa = callPackage ../development/libraries/mesa {
-    llvmPackages = llvmPackages_latest;
+    # LLVM 15 isn't supported until MESA 22.2; use LLVM 14 for now:
+    # https://docs.mesa3d.org/relnotes/22.2.0.html
+    llvmPackages = llvmPackages_14;
     inherit (darwin.apple_sdk.frameworks) OpenGL;
     inherit (darwin.apple_sdk.libs) Xplugin;
   };
