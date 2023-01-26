@@ -15,7 +15,7 @@
 , withValgrind ? lib.meta.availableOn stdenv.hostPlatform valgrind-light && !valgrind-light.meta.broken, valgrind-light
 , enableGalliumNine ? stdenv.isLinux
 , enableOSMesa ? stdenv.isLinux
-, enableOpenCL ? stdenv.isLinux && stdenv.isx86_64
+, enableOpenCL ? false
 , enablePatentEncumberedCodecs ? true
 , libclc
 , jdupes
