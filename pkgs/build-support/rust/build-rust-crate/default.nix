@@ -18,6 +18,7 @@
   # May be overridden on a per-crate level.
   # See <https://doc.rust-lang.org/rustc/codegen-options/index.html#codegen-units>
   defaultCodegenUnits ? 1,
+  parallel,
 }:
 
 let
@@ -270,6 +271,7 @@ lib.makeOverridable
           mkRustcDepArgs
           mkRustcFeatureArgs
           needUnstableCLI
+          parallel
           ;
         rustc = rust;
       };
