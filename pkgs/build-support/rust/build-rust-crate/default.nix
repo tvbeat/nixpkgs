@@ -13,6 +13,7 @@
 , cargo
 , jq
 , libiconv
+, parallel
 }:
 
 let
@@ -74,7 +75,7 @@ let
   };
 
   buildCrate = import ./build-crate.nix {
-    inherit lib stdenv mkRustcDepArgs mkRustcFeatureArgs needUnstableCLI;
+    inherit lib stdenv mkRustcDepArgs mkRustcFeatureArgs needUnstableCLI parallel;
   };
 
   installCrate = import ./install-crate.nix { inherit stdenv; };
