@@ -13,6 +13,7 @@
 , cargo
 , jq
 , libiconv
+, parallel
 }:
 
 let
@@ -253,7 +254,7 @@ crate_: lib.makeOverridable
       hasCrateBin = crate ? crateBin;
 
       buildCrate = import ./build-crate.nix {
-        inherit lib stdenv mkRustcDepArgs mkRustcFeatureArgs needUnstableCLI;
+        inherit lib stdenv mkRustcDepArgs mkRustcFeatureArgs needUnstableCLI parallel;
         rustc = rust;
       };
     in
