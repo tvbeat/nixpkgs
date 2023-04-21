@@ -435,7 +435,6 @@ lib.makeOverridable
             codegenUnits
             ;
         };
-        dontStrip = !release;
 
         # We need to preserve metadata in .rlib, which might get stripped on macOS. See https://github.com/NixOS/nixpkgs/issues/218712
         stripExclude = [ "*.rlib" ];
