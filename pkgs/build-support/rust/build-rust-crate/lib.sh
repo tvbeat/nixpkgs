@@ -59,6 +59,10 @@ build_bin() {
     $EXTRA_RUSTC_FLAGS \
     --color ${colors} \
 
+  if [[ $? -ne 0 ]]; then
+    exit 1
+  fi
+
   if [ "$crate_name_" != "$crate_name" ]; then
     mv target/bin/$crate_name_ target/bin/$crate_name
   fi
