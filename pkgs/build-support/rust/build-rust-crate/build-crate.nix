@@ -1,6 +1,6 @@
 { lib, stdenv
 , mkRustcDepArgs, mkRustcFeatureArgs, needUnstableCLI
-, rust
+, rust, parallel
 }:
 
 { crateName,
@@ -70,7 +70,8 @@
        ${lib.optionalString buildTests "build_lib_test src/lib.rs"}
     fi
 
-
+    BIN_NAMES=()
+    BIN_PATHS=()
 
     ${lib.optionalString (lib.length crateBin > 0) (lib.concatMapStringsSep "\n" (bin:
     let
@@ -89,7 +90,8 @@
       '' else ''
         BIN_PATH='${bin.path}'
       ''}
-        ${build_bin} "$BIN_NAME" "$BIN_PATH"
+        BIN_NAMES+=("$BIN_NAME")
+        BIN_PATHS+=("$BIN_PATH")
     '' else ''
       echo Binary ${bin.name or crateName} not compiled due to not having all of the required features -- ${lib.escapeShellArg (builtins.toJSON bin.requiredFeatures)} -- enabled.
     '') crateBin)}
@@ -119,13 +121,39 @@
     ${lib.optionalString (lib.length crateBin == 0 && !hasCrateBin) ''
       if [[ -e src/main.rs ]]; then
         mkdir -p target/bin
-        ${build_bin} ${crateName} src/main.rs
+        BIN_NAMES+=("${crateName}")
+        BIN_PATHS+=("src/main.rs")
       fi
       for i in src/bin/*.rs; do #*/
         mkdir -p target/bin
-        ${build_bin} "$(basename $i .rs)" "$i"
+        BIN_NAMES+=("$(basename $i .rs)")
+        BIN_PATHS+=("$i")
       done
+
     ''}
+
+    export BIN_RUSTC_OPTS
+    export LINK
+    export EXTRA_LINK_ARGS
+    export EXTRA_LINK_ARGS_BINS
+    export EXTRA_LIB
+    export BUILD_OUT_DIR
+    export EXTRA_BUILD
+    export EXTRA_FEATURES
+    export EXTRA_RUSTC_FLAGS
+    export -f build_bin
+    export -f build_bin_test
+    export -f echo_build_heading
+    export -f noisily
+    export -f echo_colored
+
+    ${parallel}/bin/parallel \
+      --no-notice \
+      --link \
+      --halt-on-error 2 \
+      -j$NIX_BUILD_CORES \
+      ${build_bin} ::: ''${BIN_NAMES[@]} ::: ''${BIN_PATHS[@]}
+
     # Remove object files to avoid "wrong ELF type"
     find target -type f -name "*.o" -print0 | xargs -0 rm -f
     runHook postBuild
