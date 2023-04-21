@@ -17,6 +17,7 @@
 # May be overriden on a per-crate level.
 # See <https://doc.rust-lang.org/rustc/codegen-options/index.html#codegen-units>
 , defaultCodegenUnits ? 1
+, parallel
 }:
 
 let
@@ -257,7 +258,7 @@ crate_: lib.makeOverridable
       hasCrateBin = crate ? crateBin;
 
       buildCrate = import ./build-crate.nix {
-        inherit lib stdenv mkRustcDepArgs mkRustcFeatureArgs needUnstableCLI;
+        inherit lib stdenv mkRustcDepArgs mkRustcFeatureArgs needUnstableCLI parallel;
         rustc = rust;
       };
     in
