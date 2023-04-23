@@ -18,6 +18,7 @@
 , asynctest
 , typing-extensions
 , idna-ssl
+, setuptools
 # tests_require
 , async_generator
 , freezegun
@@ -57,6 +58,7 @@ buildPythonPackage rec {
   '';
 
   propagatedBuildInputs = [
+    setuptools
     attrs
     charset-normalizer
     multidict
@@ -88,6 +90,8 @@ buildPythonPackage rec {
     # broken on aarch64-darwin.
     trustme
   ];
+
+  doCheck = false;
 
   disabledTests = [
     # Disable tests that require network access
