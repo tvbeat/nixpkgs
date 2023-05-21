@@ -138,6 +138,8 @@ rec {
     inherit (pkgs.darwin.apple_sdk.frameworks) AppKit;
   };
 
+  lua-rtoml = callPackage ../development/lua-modules/lua-rtoml { };
+
   vicious = callPackage ({ fetchFromGitHub }: stdenv.mkDerivation rec {
     pname = "vicious";
     version = "2.6.0";
