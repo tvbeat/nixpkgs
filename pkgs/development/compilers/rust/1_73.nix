@@ -16,22 +16,22 @@
 , CoreFoundation, Security, SystemConfiguration
 , pkgsBuildTarget, pkgsBuildBuild, pkgsBuildHost
 , makeRustPlatform
-, llvmPackages_16, llvm_16
+, llvmPackages_17, llvm_17
 } @ args:
 
 import ./default.nix {
   rustcVersion = "1.73.0";
   rustcSha256 = "sha256-ltYubR8tId96yKyzuYgkEfnnxwNhc/fy7enh8faxuzo=";
 
-  llvmSharedForBuild = pkgsBuildBuild.llvmPackages_16.libllvm.override { enableSharedLibraries = true; };
-  llvmSharedForHost = pkgsBuildHost.llvmPackages_16.libllvm.override { enableSharedLibraries = true; };
-  llvmSharedForTarget = pkgsBuildTarget.llvmPackages_16.libllvm.override { enableSharedLibraries = true; };
+  llvmSharedForBuild = pkgsBuildBuild.llvmPackages_17.libllvm.override { enableSharedLibraries = true; };
+  llvmSharedForHost = pkgsBuildHost.llvmPackages_17.libllvm.override { enableSharedLibraries = true; };
+  llvmSharedForTarget = pkgsBuildTarget.llvmPackages_17.libllvm.override { enableSharedLibraries = true; };
 
   # For use at runtime
-  llvmShared = llvm_16.override { enableSharedLibraries = true; };
+  llvmShared = llvm_17.override { enableSharedLibraries = true; };
 
   # Expose llvmPackages used for rustc from rustc via passthru for LTO in Firefox
-  llvmPackages = llvmPackages_16;
+  llvmPackages = llvmPackages_17;
 
   # Note: the version MUST be one version prior to the version we're
   # building
@@ -57,4 +57,4 @@ import ./default.nix {
   rustcPatches = [ ];
 }
 
-(builtins.removeAttrs args [ "pkgsBuildTarget" "pkgsBuildHost" "llvmPackages_16" "llvm_16"])
+(builtins.removeAttrs args [ "pkgsBuildTarget" "pkgsBuildHost" "llvmPackages_17" "llvm_17"])
