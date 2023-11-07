@@ -17,6 +17,7 @@
 , cmake
 , perl
 , git
+, fetchpatch
   # nix has a problem with the `?` in the feature list
   # enabling kafka will produce a vector with no features at all
 , enableKafka ? false
@@ -45,6 +46,13 @@ rustPlatform.buildRustPackage {
     rev = "v${version}";
     hash = "sha256-E9sbpVFDVKJKYqSiqXeC9AItset/bXvVA9mURazTn/I=";
   };
+
+  patches = [
+    (fetchpatch {
+      url = "https://github.com/vectordotdev/vector/commit/b68362c9462a2c032a8319173f6e579b75757961.patch";
+      hash = "sha256-WOHUB41AT3eYBd2mMV2KAf1rcBKhBTFqTaKKJiH+rrI=";
+    })
+  ];
 
   cargoLock = {
     lockFile = ./Cargo.lock;
