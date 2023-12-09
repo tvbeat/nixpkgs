@@ -16918,7 +16918,7 @@ with pkgs;
 
   rust_1_74 = callPackage ../development/compilers/rust/1_74.nix {
     inherit (darwin.apple_sdk.frameworks) CoreFoundation Security SystemConfiguration;
-    llvm_16 = llvmPackages_16.libllvm;
+    llvm_17 = llvmPackages_17.libllvm;
   };
   rust = rust_1_74;
 
