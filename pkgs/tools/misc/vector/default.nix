@@ -36,16 +36,16 @@
 
 let
   pname = "vector";
-  version = "0.40.0";
+  version = "0.40.0-unstable-2024-08-16";
 in
 rustPlatform.buildRustPackage {
   inherit pname version;
 
   src = fetchFromGitHub {
-    owner = "vectordotdev";
+    owner = "tvbeat";
     repo = pname;
-    rev = "v${version}";
-    hash = "sha256-KJqixwOc9M8xBzeyJFF3sFfybqAroEYu4OPD8q+PMRY=";
+    rev = "6773e342757e5765d4e96111fc2ce25dc825f514";
+    hash = "sha256-7nbVpQfgMDH4hGTAKqzSpJj3awNRErEUXEHq5fpWJD8=";
   };
 
   cargoLock = {
