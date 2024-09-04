@@ -104,10 +104,6 @@ let
 
   pamOpts = { config, name, ... }: let cfg = config; in let config = parentConfig; in {
 
-    imports = [
-      (lib.mkRenamedOptionModule [ "enableKwallet" ] [ "kwallet" "enable" ])
-    ];
-
     options = {
 
       name = mkOption {
@@ -251,35 +247,6 @@ let
         '';
       };
 
-      mysqlAuth = mkOption {
-        default = config.users.mysql.enable;
-        defaultText = literalExpression "config.users.mysql.enable";
-        type = types.bool;
-        description = ''
-          If set, the `pam_mysql` module will be used to
-          authenticate users against a MySQL/MariaDB database.
-        '';
-      };
-
-      fprintAuth = mkOption {
-        default = config.services.fprintd.enable;
-        defaultText = literalExpression "config.services.fprintd.enable";
-        type = types.bool;
-        description = ''
-          If set, fingerprint reader will be used (if exists and
-          your fingerprints are enrolled).
-        '';
-      };
-
-      oathAuth = mkOption {
-        default = config.security.pam.oath.enable;
-        defaultText = literalExpression "config.security.pam.oath.enable";
-        type = types.bool;
-        description = ''
-          If set, the OATH Toolkit will be used.
-        '';
-      };
-
       sshAgentAuth = mkOption {
         default = false;
         type = types.bool;
@@ -386,15 +353,6 @@ let
         '';
       };
 
-      pamMount = mkOption {
-        default = config.security.pam.mount.enable;
-        defaultText = literalExpression "config.security.pam.mount.enable";
-        type = types.bool;
-        description = ''
-          Enable PAM mount (pam_mount) system to mount filesystems on user login.
-        '';
-      };
-
       allowNullPassword = mkOption {
         default = false;
         type = types.bool;
@@ -462,62 +420,6 @@ let
         default = false;
         type = types.bool;
         description = "Whether to log authentication failures in {file}`/var/log/faillog`.";
-      };
-
-      enableAppArmor = mkOption {
-        default = false;
-        type = types.bool;
-        description = ''
-          Enable support for attaching AppArmor profiles at the
-          user/group level, e.g., as part of a role based access
-          control scheme.
-        '';
-      };
-
-      kwallet = {
-        enable = mkOption {
-          default = false;
-          type = types.bool;
-          description = ''
-            If enabled, pam_wallet will attempt to automatically unlock the
-            user's default KDE wallet upon login. If the user has no wallet named
-            "kdewallet", or the login password does not match their wallet
-            password, KDE will prompt separately after login.
-          '';
-        };
-
-        package = mkPackageOption pkgs.plasma5Packages "kwallet-pam" {
-          pkgsText = "pkgs.plasma5Packages";
-        };
-
-        forceRun = mkEnableOption null // {
-          description = ''
-            The `force_run` option is used to tell the PAM module for KWallet
-            to forcefully run even if no graphical session (such as a GUI
-            display manager) is detected. This is useful for when you are
-            starting an X Session or a Wayland Session from a TTY. If you
-            intend to log-in from a TTY, it is recommended that you enable
-            this option **and** ensure that `plasma-kwallet-pam.service` is
-            started by `graphical-session.target`.
-          '';
-        };
-      };
-
-      sssdStrictAccess = mkOption {
-        default = false;
-        type = types.bool;
-        description = "enforce sssd access control";
-      };
-
-      enableGnomeKeyring = mkOption {
-        default = false;
-        type = types.bool;
-        description = ''
-          If enabled, pam_gnome_keyring will attempt to automatically unlock the
-          user's default Gnome keyring upon login. If the user login password does
-          not match their keyring password, Gnome Keyring will prompt separately
-          after login.
-        '';
       };
 
       failDelay = {
@@ -646,18 +548,8 @@ let
         ];
       in {
         account = autoOrderRules [
-          { name = "ldap"; enable = use_ldap; control = "sufficient"; modulePath = "${pam_ldap}/lib/security/pam_ldap.so"; }
-          { name = "mysql"; enable = cfg.mysqlAuth; control = "sufficient"; modulePath = "${pkgs.pam_mysql}/lib/security/pam_mysql.so"; settings = {
-            config_file = "/etc/security/pam_mysql.conf";
-          }; }
-          { name = "kanidm"; enable = config.services.kanidm.enablePam; control = "sufficient"; modulePath = "${config.services.kanidm.package}/lib/pam_kanidm.so"; settings = {
-            ignore_unknown_user = true;
-          }; }
-          { name = "sss"; enable = config.services.sssd.enable; control = if cfg.sssdStrictAccess then "[default=bad success=ok user_unknown=ignore]" else "sufficient"; modulePath = "${pkgs.sssd}/lib/security/pam_sss.so"; }
-          { name = "krb5"; enable = config.security.pam.krb5.enable; control = "sufficient"; modulePath = "${pam_krb5}/lib/security/pam_krb5.so"; }
           { name = "oslogin_login"; enable = cfg.googleOsLoginAccountVerification; control = "[success=ok ignore=ignore default=die]"; modulePath = "${pkgs.google-guest-oslogin}/lib/security/pam_oslogin_login.so"; }
           { name = "oslogin_admin"; enable = cfg.googleOsLoginAccountVerification; control = "[success=ok default=ignore]"; modulePath = "${pkgs.google-guest-oslogin}/lib/security/pam_oslogin_admin.so"; }
-          { name = "systemd_home"; enable = config.services.homed.enable; control = "sufficient"; modulePath = "${config.systemd.package}/lib/security/pam_systemd_home.so"; }
           # The required pam_unix.so module has to come after all the sufficient modules
           # because otherwise, the account lookup will fail if the user does not exist
           # locally, for example with MySQL- or LDAP-auth.
@@ -671,9 +563,6 @@ let
             use_uid = true;
           }; }
           { name = "faillock"; enable = cfg.logFailures; control = "required"; modulePath = "${package}/lib/security/pam_faillock.so"; }
-          { name = "mysql"; enable = cfg.mysqlAuth; control = "sufficient"; modulePath = "${pkgs.pam_mysql}/lib/security/pam_mysql.so"; settings = {
-            config_file = "/etc/security/pam_mysql.conf";
-          }; }
           { name = "ssh_agent_auth"; enable = config.security.pam.sshAgentAuth.enable && cfg.sshAgentAuth; control = "sufficient"; modulePath = "${pkgs.pam_ssh_agent_auth}/libexec/pam_ssh_agent_auth.so"; settings = {
             file = lib.concatStringsSep ":" config.security.pam.sshAgentAuth.authorizedKeysFiles;
           }; }
@@ -687,10 +576,6 @@ let
             authorized_principals_file = ussh.authorizedPrincipalsFile;
             inherit (ussh) group;
           }; })
-          (let oath = config.security.pam.oath; in { name = "oath"; enable = cfg.oathAuth; control = "requisite"; modulePath = "${pkgs.oath-toolkit}/lib/security/pam_oath.so"; settings = {
-            inherit (oath) window digits;
-            usersfile = oath.usersFile;
-          }; })
           (let yubi = config.security.pam.yubico; in { name = "yubico"; enable = cfg.yubicoAuth; control = yubi.control; modulePath = "${pkgs.yubico-pam}/lib/security/pam_yubico.so"; settings = {
             inherit (yubi) mode debug;
             chalresp_path = yubi.challengeResponsePath;
@@ -699,7 +584,6 @@ let
           (let dp9ik = config.security.pam.dp9ik; in { name = "p9"; enable = dp9ik.enable; control = dp9ik.control; modulePath = "${pkgs.pam_dp9ik}/lib/security/pam_p9.so"; args = [
             dp9ik.authserver
           ]; })
-          { name = "fprintd"; enable = cfg.fprintAuth; control = "sufficient"; modulePath = "${config.services.fprintd.package}/lib/security/pam_fprintd.so"; }
         ] ++
           # Modules in this block require having the password set in PAM_AUTHTOK.
           # pam_unix is marked as 'sufficient' on NixOS which means nothing will run
@@ -709,20 +593,15 @@ let
           # We use try_first_pass the second time to avoid prompting password twice.
           #
           # The same principle applies to systemd-homed
-          (optionals ((cfg.unixAuth || config.services.homed.enable) &&
+          (optionals (cfg.unixAuth &&
             (config.security.pam.enableEcryptfs
               || config.security.pam.enableFscrypt
-              || cfg.pamMount
-              || cfg.kwallet.enable
-              || cfg.enableGnomeKeyring
-              || config.services.intune.enable
               || cfg.googleAuthenticator.enable
               || cfg.gnupg.enable
               || cfg.failDelay.enable
               || cfg.duoSecurity.enable
               || cfg.zfs))
             [
-              { name = "systemd_home-early"; enable = config.services.homed.enable; control = "optional"; modulePath = "${config.systemd.package}/lib/security/pam_systemd_home.so"; }
               { name = "unix-early"; enable = cfg.unixAuth; control = "optional"; modulePath = "${package}/lib/security/pam_unix.so"; settings = {
                 nullok = cfg.allowNullPassword;
                 inherit (cfg) nodelay;
@@ -735,12 +614,6 @@ let
               { name = "zfs_key"; enable = cfg.zfs; control = "optional"; modulePath = "${config.boot.zfs.package}/lib/security/pam_zfs_key.so"; settings = {
                 inherit (config.security.pam.zfs) homes;
               }; }
-              { name = "mount"; enable = cfg.pamMount; control = "optional"; modulePath = "${pkgs.pam_mount}/lib/security/pam_mount.so"; settings = {
-                disable_interactive = true;
-              }; }
-              { name = "kwallet"; enable = cfg.kwallet.enable; control = "optional"; modulePath = "${cfg.kwallet.package}/lib/security/pam_kwallet5.so"; }
-              { name = "gnome_keyring"; enable = cfg.enableGnomeKeyring; control = "optional"; modulePath = "${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so"; }
-              { name = "intune"; enable = config.services.intune.enable; control = "optional"; modulePath = "${pkgs.intune-portal}/lib/security/pam_intune.so"; }
               { name = "gnupg"; enable = cfg.gnupg.enable; control = "optional"; modulePath = "${pkgs.pam_gnupg}/lib/security/pam_gnupg.so"; settings = {
                 store-only = cfg.gnupg.storeOnly;
               }; }
@@ -752,7 +625,6 @@ let
               }; }
               { name = "duo"; enable = cfg.duoSecurity.enable; control = "required"; modulePath = "${pkgs.duo-unix}/lib/security/pam_duo.so"; }
             ]) ++ [
-          { name = "systemd_home"; enable = config.services.homed.enable; control = "sufficient"; modulePath = "${config.systemd.package}/lib/security/pam_systemd_home.so"; }
           { name = "unix"; enable = cfg.unixAuth; control = "sufficient"; modulePath = "${package}/lib/security/pam_unix.so"; settings = {
             nullok = cfg.allowNullPassword;
             inherit (cfg) nodelay;
@@ -760,24 +632,11 @@ let
             try_first_pass = true;
           }; }
           { name = "otpw"; enable = cfg.otpwAuth; control = "sufficient"; modulePath = "${pkgs.otpw}/lib/security/pam_otpw.so"; }
-          { name = "ldap"; enable = use_ldap; control = "sufficient"; modulePath = "${pam_ldap}/lib/security/pam_ldap.so"; settings = {
-            use_first_pass = true;
-          }; }
-          { name = "kanidm"; enable = config.services.kanidm.enablePam; control = "sufficient"; modulePath = "${config.services.kanidm.package}/lib/pam_kanidm.so"; settings = {
-            ignore_unknown_user = true;
-            use_first_pass = true;
-          }; }
-          { name = "sss"; enable = config.services.sssd.enable; control = "sufficient"; modulePath = "${pkgs.sssd}/lib/security/pam_sss.so"; settings = {
-            use_first_pass = true;
-          }; }
-          { name = "krb5"; enable = config.security.pam.krb5.enable; control = "[default=ignore success=1 service_err=reset]"; modulePath = "${pam_krb5}/lib/security/pam_krb5.so"; settings = {
-            use_first_pass = true;
-          }; }
-          { name = "ccreds-validate"; enable = config.security.pam.krb5.enable; control = "[default=die success=done]"; modulePath = "${pam_ccreds}/lib/security/pam_ccreds.so"; settings = {
+          { name = "ccreds-validate"; enable = false; control = "[default=die success=done]"; modulePath = "${pam_ccreds}/lib/security/pam_ccreds.so"; settings = {
             action = "validate";
             use_first_pass = true;
           }; }
-          { name = "ccreds-store"; enable = config.security.pam.krb5.enable; control = "sufficient"; modulePath = "${pam_ccreds}/lib/security/pam_ccreds.so"; settings = {
+          { name = "ccreds-store"; enable = false; control = "sufficient"; modulePath = "${pam_ccreds}/lib/security/pam_ccreds.so"; settings = {
             action = "store";
             use_first_pass = true;
           }; }
@@ -785,7 +644,6 @@ let
         ]);
 
         password = autoOrderRules [
-          { name = "systemd_home"; enable = config.services.homed.enable; control = "sufficient"; modulePath = "${config.systemd.package}/lib/security/pam_systemd_home.so"; }
           { name = "unix"; control = "sufficient"; modulePath = "${package}/lib/security/pam_unix.so"; settings = {
             nullok = true;
             yescrypt = true;
@@ -794,19 +652,6 @@ let
           { name = "fscrypt"; enable = config.security.pam.enableFscrypt; control = "optional"; modulePath = "${pkgs.fscrypt-experimental}/lib/security/pam_fscrypt.so"; }
           { name = "zfs_key"; enable = cfg.zfs; control = "optional"; modulePath = "${config.boot.zfs.package}/lib/security/pam_zfs_key.so"; settings = {
             inherit (config.security.pam.zfs) homes;
-          }; }
-          { name = "mount"; enable = cfg.pamMount; control = "optional"; modulePath = "${pkgs.pam_mount}/lib/security/pam_mount.so"; }
-          { name = "ldap"; enable = use_ldap; control = "sufficient"; modulePath = "${pam_ldap}/lib/security/pam_ldap.so"; }
-          { name = "mysql"; enable = cfg.mysqlAuth; control = "sufficient"; modulePath = "${pkgs.pam_mysql}/lib/security/pam_mysql.so"; settings = {
-            config_file = "/etc/security/pam_mysql.conf";
-          }; }
-          { name = "kanidm"; enable = config.services.kanidm.enablePam; control = "sufficient"; modulePath = "${config.services.kanidm.package}/lib/pam_kanidm.so"; }
-          { name = "sss"; enable = config.services.sssd.enable; control = "sufficient"; modulePath = "${pkgs.sssd}/lib/security/pam_sss.so"; }
-          { name = "krb5"; enable = config.security.pam.krb5.enable; control = "sufficient"; modulePath = "${pam_krb5}/lib/security/pam_krb5.so"; settings = {
-            use_first_pass = true;
-          }; }
-          { name = "gnome_keyring"; enable = cfg.enableGnomeKeyring; control = "optional"; modulePath = "${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so"; settings = {
-            use_authtok = true;
           }; }
         ];
 
@@ -822,7 +667,6 @@ let
             enable = cfg.ttyAudit.enablePattern;
             disable = cfg.ttyAudit.disablePattern;
           }; }
-          { name = "systemd_home"; enable = config.services.homed.enable; control = "required"; modulePath = "${config.systemd.package}/lib/security/pam_systemd_home.so"; }
           { name = "mkhomedir"; enable = cfg.makeHomeDir; control = "required"; modulePath = "${package}/lib/security/pam_mkhomedir.so"; settings = {
             silent = true;
             skel = config.security.pam.makeHomeDir.skelDirectory;
@@ -847,16 +691,6 @@ let
             inherit (config.security.pam.zfs) homes;
             nounmount = config.security.pam.zfs.noUnmount;
           }; }
-          { name = "mount"; enable = cfg.pamMount; control = "optional"; modulePath = "${pkgs.pam_mount}/lib/security/pam_mount.so"; settings = {
-            disable_interactive = true;
-          }; }
-          { name = "ldap"; enable = use_ldap; control = "optional"; modulePath = "${pam_ldap}/lib/security/pam_ldap.so"; }
-          { name = "mysql"; enable = cfg.mysqlAuth; control = "optional"; modulePath = "${pkgs.pam_mysql}/lib/security/pam_mysql.so"; settings = {
-            config_file = "/etc/security/pam_mysql.conf";
-          }; }
-          { name = "kanidm"; enable = config.services.kanidm.enablePam; control = "optional"; modulePath = "${config.services.kanidm.package}/lib/pam_kanidm.so"; }
-          { name = "sss"; enable = config.services.sssd.enable; control = "optional"; modulePath = "${pkgs.sssd}/lib/security/pam_sss.so"; }
-          { name = "krb5"; enable = config.security.pam.krb5.enable; control = "optional"; modulePath = "${pam_krb5}/lib/security/pam_krb5.so"; }
           { name = "otpw"; enable = cfg.otpwAuth; control = "optional"; modulePath = "${pkgs.otpw}/lib/security/pam_otpw.so"; }
           { name = "systemd"; enable = cfg.startSession; control = "optional"; modulePath = "${config.systemd.package}/lib/security/pam_systemd.so"; }
           { name = "xauth"; enable = cfg.forwardXAuth; control = "optional"; modulePath = "${package}/lib/security/pam_xauth.so"; settings = {
@@ -869,18 +703,9 @@ let
           { name = "motd"; enable = cfg.showMotd && (config.users.motd != null || config.users.motdFile != null); control = "optional"; modulePath = "${package}/lib/security/pam_motd.so"; settings = {
             inherit motd;
           }; }
-          { name = "apparmor"; enable = cfg.enableAppArmor && config.security.apparmor.enable; control = "optional"; modulePath = "${pkgs.apparmor-pam}/lib/security/pam_apparmor.so"; settings = {
-            order = "user,group,default";
-            debug = true;
-          }; }
-          { name = "kwallet"; enable = cfg.kwallet.enable; control = "optional"; modulePath = "${cfg.kwallet.package}/lib/security/pam_kwallet5.so"; settings = lib.mkIf cfg.kwallet.forceRun { force_run = true; }; }
-          { name = "gnome_keyring"; enable = cfg.enableGnomeKeyring; control = "optional"; modulePath = "${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so"; settings = {
-            auto_start = true;
-          }; }
           { name = "gnupg"; enable = cfg.gnupg.enable; control = "optional"; modulePath = "${pkgs.pam_gnupg}/lib/security/pam_gnupg.so"; settings = {
             no-autostart = cfg.gnupg.noAutostart;
           }; }
-          { name = "intune"; enable = config.services.intune.enable; control = "optional"; modulePath = "${pkgs.intune-portal}/lib/security/pam_intune.so"; }
         ];
       };
     };
@@ -888,10 +713,7 @@ let
   };
 
 
-  inherit (pkgs) pam_krb5 pam_ccreds;
-
-  use_ldap = (config.users.ldap.enable && config.users.ldap.loginPam);
-  pam_ldap = if config.users.ldap.daemon.enable then pkgs.nss_pam_ldapd else pkgs.pam_ldap;
+  inherit (pkgs) pam_ccreds;
 
   # Create a limits.conf(5) file.
   makeLimitsConf = limits:
@@ -1094,26 +916,6 @@ in
         description = ''
           This controls the hostname for the 9front authentication server
           that users will be authenticated against.
-        '';
-      };
-    };
-
-    security.pam.krb5 = {
-      enable = mkOption {
-        default = config.security.krb5.enable;
-        defaultText = literalExpression "config.security.krb5.enable";
-        type = types.bool;
-        description = ''
-          Enables Kerberos PAM modules (`pam-krb5`,
-          `pam-ccreds`).
-
-          If set, users can authenticate with their Kerberos password.
-          This requires a valid Kerberos configuration
-          (`config.security.krb5.enable` should be set to
-          `true`).
-
-          Note that the Kerberos PAM modules are not necessary when using SSS
-          to handle Kerberos authentication.
         '';
       };
     };
@@ -1531,12 +1333,7 @@ in
     environment.systemPackages =
       # Include the PAM modules in the system path mostly for the manpages.
       [ package ]
-      ++ optional config.users.ldap.enable pam_ldap
-      ++ optional config.services.kanidm.enablePam config.services.kanidm.package
-      ++ optional config.services.sssd.enable pkgs.sssd
-      ++ optionals config.security.pam.krb5.enable [pam_krb5 pam_ccreds]
       ++ optionals config.security.pam.enableOTPW [ pkgs.otpw ]
-      ++ optionals config.security.pam.oath.enable [ pkgs.oath-toolkit ]
       ++ optionals config.security.pam.p11.enable [ pkgs.pam_p11 ]
       ++ optionals config.security.pam.enableFscrypt [ pkgs.fscrypt-experimental ]
       ++ optionals config.security.pam.u2f.enable [ pkgs.pam_u2f ];
@@ -1585,30 +1382,6 @@ in
         fscrypt = {};
       };
 
-    security.apparmor.includes."abstractions/pam" =
-      lib.concatMapStrings
-        (name: "r ${config.environment.etc."pam.d/${name}".source},\n")
-        (attrNames config.security.pam.services) +
-      (with lib; pipe config.security.pam.services [
-        attrValues
-        (catAttrs "rules")
-        (concatMap attrValues)
-        (concatMap attrValues)
-        (filter (rule: rule.enable))
-        (catAttrs "modulePath")
-        # TODO(@uninsane): replace this warning + filter with just an assertion
-        (map (modulePath: lib.warnIfNot
-          (hasPrefix "/" modulePath)
-          ''non-absolute PAM modulePath "${modulePath}" is unsupported by apparmor and will be treated as an error by future versions of nixpkgs; see <https://github.com/NixOS/nixpkgs/pull/314791>''
-          modulePath
-        ))
-        (filter (hasPrefix "/"))
-        unique
-        (map (module: "mr ${module},"))
-        concatLines
-      ]);
-
     security.sudo.extraConfig = optionalSudoConfigForSSHAgentAuth;
-    security.sudo-rs.extraConfig = optionalSudoConfigForSSHAgentAuth;
   };
 }

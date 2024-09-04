@@ -5,10 +5,6 @@ with lib;
 let
   cfg = config.services.journald;
 in {
-  imports = [
-    (mkRenamedOptionModule [ "services" "journald" "enableHttpGateway" ] [ "services" "journald" "gateway" "enable" ])
-  ];
-
   options = {
     services.journald.console = mkOption {
       default = "";
@@ -78,8 +74,7 @@ in {
     };
 
     services.journald.forwardToSyslog = mkOption {
-      default = config.services.rsyslogd.enable || config.services.syslog-ng.enable;
-      defaultText = literalExpression "services.rsyslogd.enable || services.syslog-ng.enable";
+      default = false;
       type = types.bool;
       description = ''
         Whether to forward log messages to syslog.

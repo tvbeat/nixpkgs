@@ -777,11 +777,6 @@ in
 
 
   config = mkMerge [
-    {
-      warnings = optional (!config.boot.enableContainers && config.containers != {})
-        "containers.<name> is used, but boot.enableContainers is false. To use containers.<name>, set boot.enableContainers to true.";
-    }
-
     (mkIf (config.boot.enableContainers) (let
       unit = {
         description = "Container '%i'";
@@ -806,10 +801,6 @@ in
         serviceConfig = serviceDirectives dummyConfig;
       };
     in {
-      warnings =
-        (optional (config.virtualisation.containers.enable && versionOlder config.system.stateVersion "22.05") ''
-          Enabling both boot.enableContainers & virtualisation.containers on system.stateVersion < 22.05 is unsupported.
-        '');
 
       systemd.targets.multi-user.wants = [ "machines.target" ];
 
@@ -902,11 +893,6 @@ in
         '') config.containers);
 
       networking.dhcpcd.denyInterfaces = [ "ve-*" "vb-*" ];
-
-      services.udev.extraRules = optionalString config.networking.networkmanager.enable ''
-        # Don't manage interfaces created by nixos-container.
-        ENV{INTERFACE}=="v[eb]-*", ENV{NM_UNMANAGED}="1"
-      '';
 
       environment.systemPackages = [
         nixos-container

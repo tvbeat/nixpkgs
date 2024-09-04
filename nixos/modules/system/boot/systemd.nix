@@ -681,21 +681,6 @@ in
     # Increase numeric PID range (set directly instead of copying a one-line file from systemd)
     # https://github.com/systemd/systemd/pull/12226
     boot.kernel.sysctl."kernel.pid_max" = mkIf pkgs.stdenv.is64bit (lib.mkDefault 4194304);
-
-    services.logrotate.settings = {
-      "/var/log/btmp" = mapAttrs (_: mkDefault) {
-        frequency = "monthly";
-        rotate = 1;
-        create = "0660 root ${config.users.groups.utmp.name}";
-        minsize = "1M";
-      };
-      "/var/log/wtmp" = mapAttrs (_: mkDefault) {
-        frequency = "monthly";
-        rotate = 1;
-        create = "0664 root ${config.users.groups.utmp.name}";
-        minsize = "1M";
-      };
-    };
   };
 
   # FIXME: Remove these eventually.

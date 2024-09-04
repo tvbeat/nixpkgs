@@ -262,14 +262,6 @@ in
       export PATH="${wrapperDir}:$PATH"
     '';
 
-    security.apparmor.includes = lib.mapAttrs' (wrapName: wrap: lib.nameValuePair
-     "nixos/security.wrappers/${wrapName}" ''
-      include "${pkgs.apparmorRulesFromClosure { name="security.wrappers.${wrapName}"; } [
-        (securityWrapper wrap.source)
-      ]}"
-      mrpx ${wrap.source},
-    '') wrappers;
-
     systemd.mounts = [{
       where = parentWrapperDir;
       what = "tmpfs";

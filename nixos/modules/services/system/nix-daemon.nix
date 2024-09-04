@@ -247,8 +247,6 @@ in
 
     users.users = nixbldUsers;
 
-    services.displayManager.hiddenUsers = attrNames nixbldUsers;
-
     # Legacy configuration conversion.
     nix.settings = mkMerge [
       (mkIf (isNixAtLeast "2.3pre") { sandbox-fallback = false; })

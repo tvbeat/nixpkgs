@@ -725,8 +725,4 @@ in
 
     boot.initrd.supportedFilesystems = map (fs: fs.fsType) fileSystems;
   };
-
-  imports = [
-    (mkRenamedOptionModule [ "boot" "initrd" "mdadmConf" ] [ "boot" "swraid" "mdadmConf" ])
-  ];
 }

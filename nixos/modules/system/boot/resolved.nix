@@ -187,9 +187,6 @@ in
         "dnsmasq-resolv.conf".source = "/run/systemd/resolve/resolv.conf";
       };
 
-      # If networkmanager is enabled, ask it to interface with resolved.
-      networking.networkmanager.dns = "systemd-resolved";
-
       networking.resolvconf.package = pkgs.systemd;
 
     })

@@ -608,12 +608,6 @@ let
            network-local-commands = networkLocalCommands;
          };
 
-    services.udev.extraRules =
-      ''
-        KERNEL=="tun", TAG+="systemd"
-      '';
-
-
   };
 
 in

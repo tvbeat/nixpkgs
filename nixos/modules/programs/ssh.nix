@@ -36,8 +36,7 @@ in
 
       enableAskPassword = lib.mkOption {
         type = lib.types.bool;
-        default = config.services.xserver.enable;
-        defaultText = lib.literalExpression "config.services.xserver.enable";
+        default = false;
         description = "Whether to configure SSH_ASKPASS in the environment.";
       };
 
@@ -272,7 +271,7 @@ in
   config = {
 
     programs.ssh.setXAuthLocation =
-      lib.mkDefault (config.services.xserver.enable || config.programs.ssh.forwardX11 == true || config.services.openssh.settings.X11Forwarding);
+      lib.mkDefault (config.programs.ssh.forwardX11 == true || config.services.openssh.settings.X11Forwarding);
 
     assertions =
       [ { assertion = cfg.forwardX11 == true -> cfg.setXAuthLocation;
