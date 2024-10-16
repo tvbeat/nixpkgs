@@ -48,16 +48,16 @@
 
 let
   pname = "vector";
-  version = "0.41.1";
+  version = "0.41.1-unstabe-2024-10-16";
 in
 rustPlatform.buildRustPackage {
   inherit pname version;
 
   src = fetchFromGitHub {
-    owner = "vectordotdev";
+    owner = "tvbeat";
     repo = pname;
-    rev = "v${version}";
-    hash = "sha256-E6AVjxwXMDonqsAMcCpaZBEPCi9bVXUygG4PUOLh+ck=";
+    rev = "b47258d79d892813f438c181b4dbe4ec3788a41e";
+    hash = "sha256-KxgFfSuyfEcVJ8EXQuMCtvvv2V4SIdZjfHjSq6Hjkgg=";
   };
 
   cargoLock = {
@@ -70,6 +70,7 @@ rustPlatform.buildRustPackage {
       "ntapi-0.3.7" = "sha256-G6ZCsa3GWiI/FeGKiK9TWkmTxen7nwpXvm5FtjNtjWU=";
       "tokio-util-0.7.11" = "sha256-oV9fSPjLMY1KbcbDP2WTVjF/N0qlQBPDIYHOp3aNCTY=";
       "tracing-0.2.0" = "sha256-YAxeEofFA43PX2hafh3RY+C81a2v6n1fGzYz2FycC3M=";
+      "vrl-0.19.0" = "sha256-VdXJuxvlp3scd+UfkuAIn9kZR7/fdRV88qY+WZLGHmE=";
     };
   };
 
