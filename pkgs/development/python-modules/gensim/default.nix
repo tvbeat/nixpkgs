@@ -19,8 +19,7 @@ buildPythonPackage rec {
   version = "4.3.3";
   pyproject = true;
 
-  # C code generated with CPython3.12 does not work cython_0.
-  disabled = !(pythonOlder "3.12");
+  disabled = pythonOlder "3.8";
 
   src = fetchPypi {
     inherit pname version;
@@ -43,10 +42,6 @@ buildPythonPackage rec {
     mock
     pyemd
     pytestCheckHook
-  ];
-
-  pythonRelaxDeps = [
-    "scipy"
   ];
 
   pythonImportsCheck = [ "gensim" ];
