@@ -1,12 +1,11 @@
 {
   lib,
   buildPythonPackage,
-  cython_0,
-  oldest-supported-numpy,
-  setuptools,
-  fetchPypi,
-  mock,
+  cython,
   numpy,
+  setuptools,
+  fetchFromGitHub,
+  mock,
   scipy,
   smart-open,
   pyemd,
@@ -20,18 +19,25 @@ buildPythonPackage rec {
   pyproject = true;
 
   # C code generated with CPython3.12 does not work cython_0.
-  disabled = !(pythonOlder "3.12");
+  # disabled = !(pythonOlder "3.12");
 
-  src = fetchPypi {
-    inherit pname version;
-    hash = "sha256-hIUgdqaj2I19rFviReJMIcO4GbVl4UwbYfo+Xudtz1c=";
+  src = fetchFromGitHub {
+    owner = "julianpollmann";
+    repo = "gensim";
+    rev = "5b9c76c48b9097b8a46eed1f75474ad3f8a31e4e";
+    hash = "sha256-gipx2BGiIVtAubjzsWzaGYkYfrJHBaiGGnCvin59nlk=";
   };
 
   build-system = [
-    cython_0
-    oldest-supported-numpy
+    cython
+    numpy
     setuptools
   ];
+
+  postPatch = ''
+    substituteInPlace pyproject.toml \
+      --replace-fail "Cython>=3.1.3" "Cython" \
+  '';
 
   dependencies = [
     smart-open
@@ -43,10 +49,6 @@ buildPythonPackage rec {
     mock
     pyemd
     pytestCheckHook
-  ];
-
-  pythonRelaxDeps = [
-    "scipy"
   ];
 
   pythonImportsCheck = [ "gensim" ];
