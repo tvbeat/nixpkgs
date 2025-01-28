@@ -17,6 +17,7 @@
       (if release then (["-C opt-level=3" "-C codegen-units=1"]
                        ++ lib.optional (! lib.elem "proc-macro" crateType
                                      && ! lib.elem "dylib" crateType
+                                     && ! lib.elem "cdylib" crateType
                                      && ! lib.elem "staticlib" crateType) "-C lto=yes")
                   else ["-C debuginfo=2" "-C embed-bitcode=no"])
       ++ [
