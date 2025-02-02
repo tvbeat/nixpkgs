@@ -19,6 +19,8 @@
   # See <https://doc.rust-lang.org/rustc/codegen-options/index.html#codegen-units>
   defaultCodegenUnits ? 1,
   parallel,
+  stdenvAdapters,
+  clangStdenv,
 }:
 
 let
@@ -267,13 +269,13 @@ lib.makeOverridable
       buildCrate = import ./build-crate.nix {
         inherit
           lib
-          stdenv
           mkRustcDepArgs
           mkRustcFeatureArgs
           needUnstableCLI
           parallel
           ;
         rustc = rust;
+        stdenv = if release then stdenv else (stdenvAdapters.useMoldLinker clangStdenv);
       };
     in
     stdenv.mkDerivation (
