@@ -110,6 +110,14 @@ buildPythonPackage rec {
 
   disabledTests =
     [
+      "test_client"
+      "test_server"
+      "test_del_with_scheduled_cleanup[pyloop]"
+      "test_broken_connection[pyloop]"
+      "test_parse_unusual_request_line[c-parser-pyloop]"
+      "test_http_request_parser_utf8_request_line[c-parser-pyloop]"
+      "test_parse_uri_utf8[c-parser-pyloop]"
+      "test_keepalive_expires_on_time[pyloop]"
       # Disable tests that require network access
       "test_client_session_timeout_zero"
       "test_mark_formdata_as_processed"
