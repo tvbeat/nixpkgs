@@ -21,7 +21,20 @@
 }:
 
 let
-  pythonEnv = python.withPackages (
+  python' = python.override {
+    self = python';
+    packageOverrides = final: prev: {
+      pyopenssl = prev.pyopenssl.overridePythonAttrs (o: {
+        patches = [
+          # fix for oauth2client used by google-cloud-sdk
+          # see: https://github.com/googleapis/google-api-python-client/issues/2554
+          ./revert-1374-Remove-APIs-that-have-been-deprecated-for-a-year.patch
+        ];
+      });
+    };
+  };
+
+  pythonEnv = python'.withPackages (
     p:
     with p;
     [
