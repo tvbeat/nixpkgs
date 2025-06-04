@@ -20,6 +20,7 @@
   pytest-postgresql,
   pytest-xdist,
   pytestCheckHook,
+  pythonOlder,
 }:
 
 buildPythonPackage rec {
@@ -43,6 +44,8 @@ buildPythonPackage rec {
     sqlglot
     typing-extensions
   ];
+
+  doCheck = !(pythonOlder "3.12");
 
   pythonImportsCheck = [ "sqlframe" ];
 
