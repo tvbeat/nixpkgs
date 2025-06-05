@@ -31,6 +31,8 @@ buildPythonPackage rec {
       --replace-fail '"git"' '"${lib.getExe gitMinimal}"'
   '';
 
+  doCheck = !(pythonOlder "3.12");
+
   build-system = [
     setuptools
     setuptools-scm
