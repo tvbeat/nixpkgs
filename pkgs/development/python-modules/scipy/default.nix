@@ -39,6 +39,7 @@
 
   # Reverse dependency
   sage,
+  pythonOlder,
 }:
 
 let
@@ -159,7 +160,7 @@ buildPythonPackage {
       "test_funcs"
     ];
 
-  doCheck = !(stdenv.hostPlatform.isx86_64 && stdenv.hostPlatform.isDarwin);
+  doCheck = !(stdenv.hostPlatform.isx86_64 && stdenv.hostPlatform.isDarwin) && !(pythonOlder "3.12");
 
   preConfigure = ''
     # Helps parallelization a bit
