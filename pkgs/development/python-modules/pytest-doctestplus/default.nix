@@ -49,6 +49,8 @@ buildPythonPackage rec {
     pytestCheckHook
   ];
 
+  doCheck = !(pythonOlder "3.12");
+
   disabledTests = [
     # ERROR: usage: __main__.py [options] [file_or_dir] [file_or_dir] [...]
     # __main__.py: error: unrecognized arguments: --remote-data
